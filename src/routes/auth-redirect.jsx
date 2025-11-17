@@ -1,5 +1,11 @@
 import { Navigate } from 'react-router';
+import { useAuth } from '../hooks/use-auth';
+import { AUTH_URL, ADMIN_URL } from '../constant/url';
 
 export default function AuthRedirect() {
-  return <Navigate to={'/auth/login'} replace />;
+  const { isLoggedIn } = useAuth();
+
+  if (isLoggedIn) return <Navigate to={ADMIN_URL.DASHBOARD} replace />;
+
+  return <Navigate to={AUTH_URL.LOGIN} replace />;
 }

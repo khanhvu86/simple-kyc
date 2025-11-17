@@ -4,6 +4,7 @@ import AuthLayout from '../layouts/auth';
 import AdminLayout from '../layouts/admin';
 import Login from '../pages/login';
 import Dashboard from '../pages/dashboard';
+import { AUTH_URL, ADMIN_URL } from '../constant/url';
 
 const Router = createBrowserRouter([
   {
@@ -11,24 +12,24 @@ const Router = createBrowserRouter([
     Component: AuthRedirect,
   },
   {
-    path: '/auth',
+    path: AUTH_URL.BASE,
     Component: AuthLayout,
     children: [
       { index: true, Component: Login },
       {
-        path: '/auth/login',
+        path: AUTH_URL.LOGIN,
         index: true,
         Component: Login,
       },
     ],
   },
   {
-    path: '/admin',
+    path: ADMIN_URL.BASE,
     Component: AdminLayout,
     children: [
       { index: true, Component: Dashboard },
       {
-        path: '/admin/dashboard',
+        path: ADMIN_URL.DASHBOARD,
         index: true,
         Component: Dashboard,
       },

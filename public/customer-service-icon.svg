@@ -1,0 +1,44 @@
+<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <!-- Speech bubble -->
+  <circle cx="100" cy="80" r="35" fill="#FF9966" opacity="0.9"/>
+  
+  <!-- Headset band (left side) -->
+  <path d="M 65 70 Q 65 35, 100 35 Q 135 35, 135 70" 
+        fill="none" 
+        stroke="#1a1a1a" 
+        stroke-width="12" 
+        stroke-linecap="round"/>
+  
+  <!-- Left earpiece -->
+  <ellipse cx="65" cy="75" rx="12" ry="18" fill="#1a1a1a"/>
+  
+  <!-- Right earpiece -->
+  <ellipse cx="135" cy="75" rx="12" ry="18" fill="#1a1a1a"/>
+  
+  <!-- Microphone boom -->
+  <path d="M 135 80 Q 145 95, 145 110" 
+        fill="none" 
+        stroke="#1a1a1a" 
+        stroke-width="8" 
+        stroke-linecap="round"/>
+  
+  <!-- Microphone tip -->
+  <circle cx="145" cy="115" r="8" fill="#1a1a1a"/>
+  
+  <!-- Text: CUSTOMER -->
+  <text x="100" y="155" 
+        font-family="Arial Black, Arial, sans-serif" 
+        font-size="24" 
+        font-weight="900" 
+        fill="#1a1a1a" 
+        text-anchor="middle">CUSTOMER</text>
+  
+  <!-- Text: SERVICE -->
+  <text x="100" y="175" 
+        font-family="Arial Black, Arial, sans-serif" 
+        font-size="16" 
+        font-weight="900" 
+        fill="#FF9966" 
+        text-anchor="middle" 
+        letter-spacing="3">SERVICE</text>
+</svg>

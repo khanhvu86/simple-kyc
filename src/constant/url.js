@@ -10,4 +10,5 @@ const ADMIN_BASE = '/admin';
 export const ADMIN_URL = {
   BASE: ADMIN_BASE,
   DASHBOARD: `${ADMIN_BASE}/dashboard`,
+  PERSONAL_INFORMATION: `${ADMIN_BASE}/personal-information`,
 };

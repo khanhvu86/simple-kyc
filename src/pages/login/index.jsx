@@ -60,17 +60,23 @@ const Login = () => {
         </div>
         <div className="flex items-center justify-between mb-4">
           <Checkbox label="Remember me" {...register('remember')} />
+          <a
+            href="#"
+            className="text-sm text-(--secondary-color) hover:underline"
+          >
+            Lost Password?
+          </a>
         </div>
         {error?.message && (
           <small className="text-red-600 my-4 block">{error.message}</small>
         )}
         <Button isLoading={isPending} disabled={isPending}>
-          Login
+          Login to your account
         </Button>
       </form>
-      <p className="mt-4 text-sm text-center text-gray-600">
-        Don't have an account?
-        <a href="#" className="text-blue-600 hover:underline">
+      <p className="mt-4 text-sm text-gray-600">
+        Don't have an account?&nbsp;
+        <a href="#" className="text-(--secondary-color) hover:underline">
           Sign up
         </a>
       </p>

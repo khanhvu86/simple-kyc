@@ -1,10 +1,11 @@
+import { AUTH_URL, ADMIN_URL } from '../constant/url';
 import { createBrowserRouter } from 'react-router-dom';
 import AuthRedirect from './auth-redirect';
 import AuthLayout from '../layouts/auth';
 import AdminLayout from '../layouts/admin';
-import Login from '../pages/login';
 import Dashboard from '../pages/dashboard';
-import { AUTH_URL, ADMIN_URL } from '../constant/url';
+import Login from '../pages/login';
+import PersonalInformation from '../pages/personal-information';
 
 const Router = createBrowserRouter([
   {
@@ -32,6 +33,11 @@ const Router = createBrowserRouter([
         path: ADMIN_URL.DASHBOARD,
         index: true,
         Component: Dashboard,
+      },
+      {
+        path: ADMIN_URL.PERSONAL_INFORMATION,
+        index: true,
+        Component: PersonalInformation,
       },
     ],
   },

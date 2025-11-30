@@ -1,4 +1,6 @@
-const Select = (props, ref) => {
+import { forwardRef } from 'react';
+
+const Select = forwardRef((props, ref) => {
   const { label, options, error, ...rest } = props;
 
   return (
@@ -18,6 +20,6 @@ const Select = (props, ref) => {
       {error && <small className="text-red-600 my-2">{error}</small>}
     </div>
   );
-};
+});
 
 export default Select;

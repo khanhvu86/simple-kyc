@@ -1,15 +1,13 @@
 import { useForm } from 'react-hook-form';
 import { useLoginMutation } from '../../hooks/use-login-mutation';
 import { useNavigate } from 'react-router';
+import { TOKEN } from '../../constant/auth';
+import { ADMIN_URL } from '../../constant/url';
 import Button from '../../components/button';
 import Checkbox from '../../components/checkbox';
 import Input from '../../components/input';
-import { TOKEN } from '../../constant/auth';
-import { ADMIN_URL } from '../../constant/url';
 
 const Login = () => {
-  const navigate = useNavigate();
-
   const {
     handleSubmit,
     register,
@@ -17,12 +15,14 @@ const Login = () => {
     watch,
   } = useForm();
 
+  const navigate = useNavigate();
+
   const { mutateAsync: login, isPending, error, reset } = useLoginMutation();
 
   const onSubmit = async (data) => {
     try {
       const response = await login({
-        username: data.username,
+        email: data.email,
         password: data.password,
       });
       const { accessToken } = response.data;
@@ -42,11 +42,11 @@ const Login = () => {
       <form className="mt-6" onSubmit={handleSubmit(onSubmit)} noValidate>
         <div className="mb-4">
           <Input
-            label="Username"
-            placeholder="Enter your username"
+            label="Email"
+            placeholder="Enter your email"
             type="text"
             error={errors.email?.message}
-            {...register('username', { required: 'Username is required' })}
+            {...register('email', { required: 'Email is required' })}
           />
         </div>
         <div className="mb-4">
@@ -70,7 +70,7 @@ const Login = () => {
         {error?.message && (
           <small className="text-red-600 my-4 block">{error.message}</small>
         )}
-        <Button isLoading={isPending} disabled={isPending}>
+        <Button type="submit" isLoading={isPending} disabled={isPending}>
           Login to your account
         </Button>
       </form>

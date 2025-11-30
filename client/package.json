@@ -1,5 +1,5 @@
 {
-  "name": "simple-kyc",
+  "name": "simple-kyc-client",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -18,6 +18,8 @@
     "@tailwindcss/vite": "^4.1.17",
     "@tanstack/react-query": "^5.90.9",
     "axios": "^1.13.2",
+    "json-server": "^1.0.0-beta.3",
+    "json-server-auth": "^2.1.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "react-hook-form": "^7.66.0",

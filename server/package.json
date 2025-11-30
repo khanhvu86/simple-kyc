@@ -1,0 +1,11 @@
+{
+  "name": "simple-kyc-server",
+  "version": "0.0.0",
+  "scripts": {
+    "start": "json-server-auth db.json --port 8000"
+  },
+  "dependencies": {
+    "json-server": "^0.17.4",
+    "json-server-auth": "^2.1.0"
+  }
+}

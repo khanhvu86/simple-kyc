@@ -1,0 +1,70 @@
+{
+  "users": [
+    {
+      "email": "officer@gmail.com",
+      "password": "$2a$10$x1/frEICkKU5kb.MLTlt.OEQiuSWdjPJrle3TjuqWeraf0PdYwn5y",
+      "id": "KbriJKi"
+    },
+    {
+      "email": "khanh@gmail.com",
+      "password": "$2a$10$0ZWLsSD5HafIyBn98gCryuZQQPyJBn6lWIiIc9HrlnHS.OYgNF1u2",
+      "id": "udP6zDJ",
+      "personalInformationId": "0Y_F3Tk"
+    }
+  ],
+  "personalInformation": [
+    {
+      "firstName": "Khanh",
+      "lastName": "Vu",
+      "dateOfBirth": "14/10/2003",
+      "age": 22,
+      "id": "0Y_F3Tk"
+    }
+  ],
+  "addresses": [
+    {
+      "personalInformationId": "0Y_F3Tk",
+      "country": "Vietnam",
+      "city": "Hanoi",
+      "street": "Hang Dau",
+      "postalCode": 10000,
+      "type": 1,
+      "id": "MgbDMjN"
+    }
+  ],
+  "emails": [
+    {
+      "personalInformationId": "0Y_F3Tk",
+      "email": "khanhbarca1410@gmail.com",
+      "type": 0,
+      "preferred": false,
+      "id": "t7xQAMr"
+    }
+  ],
+  "phones": [
+    {
+      "personalInformationId": "0Y_F3Tk",
+      "phone": "0928492950",
+      "type": 1,
+      "preffered": true,
+      "id": "0UD4uRy"
+    }
+  ],
+  "documents": [
+    {
+      "personalInformationId": "0Y_F3Tk",
+      "type": 2,
+      "expiryDate": "22/06/2028",
+      "id": "x-A0c7x"
+    }
+  ],
+  "occupations": [
+    {
+      "personalInformationId": "0Y_F3Tk",
+      "occupation": "Employee",
+      "fromDate": "07/08/2025",
+      "toDate": "07/08/2026",
+      "id": "oY_3oK1"
+    }
+  ]
+}

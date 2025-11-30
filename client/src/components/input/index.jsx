@@ -1,7 +1,7 @@
 import { forwardRef } from 'react';
 
-export const Input = forwardRef((props, ref) => {
-  const { label, placeholder, type = 'text', error, ...rest } = props;
+const Input = forwardRef((props, ref) => {
+  const { label, placeholder, type = 'text', error, value, ...rest } = props;
 
   return (
     <div>
@@ -12,6 +12,7 @@ export const Input = forwardRef((props, ref) => {
         ref={ref}
         className="w-full px-4 py-2 mt-2 border border-(--border-color) rounded-md focus:outline-none focus:ring-2 focus:ring-(--secondary-color)"
         placeholder={placeholder}
+        value={value}
         {...rest}
       />
 

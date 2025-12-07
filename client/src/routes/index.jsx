@@ -1,52 +1,60 @@
 import { AUTH_URL, ADMIN_URL } from '../constant/url';
-import { createBrowserRouter } from 'react-router-dom';
-import AuthRedirect from './auth-redirect';
+import { USER_ROLE } from '../constant/user';
 import AuthLayout from '../layouts/auth';
 import AdminLayout from '../layouts/admin';
 import Dashboard from '../pages/dashboard';
 import Login from '../pages/login';
-import PersonalInformation from '../pages/personal-information';
-import FinancialStatus from '../pages/financial-status';
+import Submissions from '../pages/submissions';
+import KYC from '../pages/kyc';
+import UserProfile from '../pages/user-profile';
+import PrivateRoute from '../components/private-route';
 
-const Router = createBrowserRouter([
-  {
-    path: '/',
-    Component: AuthRedirect,
-  },
+export const AppRoutes = [
   {
     path: AUTH_URL.BASE,
-    Component: AuthLayout,
+    element: <AuthLayout />,
     children: [
-      { index: true, Component: Login },
+      { index: true, element: <Login /> },
       {
-        path: AUTH_URL.LOGIN,
         index: true,
-        Component: Login,
+        path: AUTH_URL.LOGIN,
+        element: <Login />,
       },
     ],
   },
   {
     path: ADMIN_URL.BASE,
-    Component: AdminLayout,
+    element: (
+      <PrivateRoute requiredRoles={[USER_ROLE.NORMAL_USER, USER_ROLE.OFFICER]}>
+        <AdminLayout />
+      </PrivateRoute>
+    ),
     children: [
-      { index: true, Component: Dashboard },
+      { index: true, element: <Dashboard /> },
       {
+        index: true,
         path: ADMIN_URL.DASHBOARD,
-        index: true,
-        Component: Dashboard,
+        element: <Dashboard />,
       },
       {
-        path: ADMIN_URL.PERSONAL_INFORMATION,
         index: true,
-        Component: PersonalInformation,
+        path: ADMIN_URL.USER_PROFILE,
+        element: (
+          <PrivateRoute requiredRoles={[0]}>
+            <UserProfile />
+          </PrivateRoute>
+        ),
       },
       {
-        path: ADMIN_URL.FINANCIAL_STATUS,
         index: true,
-        Component: FinancialStatus,
+        path: ADMIN_URL.KYC,
+        element: <KYC />,
+      },
+      {
+        index: true,
+        path: ADMIN_URL.SUBMISSIONS,
+        element: <Submissions />,
       },
     ],
   },
-]);
-
-export default Router;
+];

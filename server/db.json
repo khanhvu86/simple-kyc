@@ -2,21 +2,23 @@
   "users": [
     {
       "id": "KbriJKi",
-      "email": "officer@gmail.com",
-      "password": "$2a$10$x1/frEICkKU5kb.MLTlt.OEQiuSWdjPJrle3TjuqWeraf0PdYwn5y"
+      "email": "officer123@gmail.com",
+      "password": "$2a$10$x1/frEICkKU5kb.MLTlt.OEQiuSWdjPJrle3TjuqWeraf0PdYwn5y",
+      "role": 1
     },
     {
       "id": "udP6zDJ",
-      "personalInformationId": "0Y_F3Tk",
-      "financialStatusId": "019aEA2d",
-      "email": "khanh@gmail.com",
-      "password": "$2a$10$0ZWLsSD5HafIyBn98gCryuZQQPyJBn6lWIiIc9HrlnHS.OYgNF1u2"
+      "email": "khanh123@gmail.com",
+      "password": "$2a$10$0ZWLsSD5HafIyBn98gCryuZQQPyJBn6lWIiIc9HrlnHS.OYgNF1u2",
+      "role": 0
     }
   ],
-  "personalInformation": [
+  "userProfiles": [
     {
       "id": "0Y_F3Tk",
+      "userId": "udP6zDJ",
       "firstName": "Khanh",
+      "middleName": "",
       "lastName": "Vu",
       "dateOfBirth": "2025-12-02",
       "age": 22,
@@ -38,7 +40,7 @@
       ],
       "emails": [
         {
-          "email": "khanh@gmail.com",
+          "email": "khanh123@gmail.com",
           "type": "1",
           "preferred": false
         }
@@ -77,12 +79,6 @@
           "toDate": "2025-12-02"
         }
       ],
-      "middleName": ""
-    }
-  ],
-  "financialStatus": [
-    {
-      "id": "019aEA2d",
       "incomes": [
         {
           "type": 1,
@@ -125,7 +121,9 @@
       ],
       "total": 734.1,
       "experience": "1",
-      "riskTolerance": 0
+      "riskTolerance": 0,
+      "submitDate": "12/7/2025",
+      "status": 0
     }
   ]
 }

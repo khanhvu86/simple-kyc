@@ -10,7 +10,7 @@ export const Button = (props) => {
   return (
     <button
       type={type}
-      className="btn-primary px-4 py-2 mt-4 rounded-md cursor-pointer flex items-center gap-3"
+      className="btn-primary px-4 py-2 rounded-md cursor-pointer flex items-center gap-3"
       {...rest}
       onClick={handleClick}
     >

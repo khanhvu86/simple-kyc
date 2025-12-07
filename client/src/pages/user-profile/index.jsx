@@ -1,9 +1,10 @@
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router';
 import { useFieldArray, useForm } from 'react-hook-form';
-import { useEffect } from 'react';
 import {
-  usePersonalInformationQuery,
-  useUpdatePersonalInformationMutation,
-} from '../../hooks/personal-information';
+  useUpdateUserProfileMutation,
+  useUserProfileByUserIdQuery,
+} from '../../hooks/user-profile';
 import {
   addressTypes,
   documentTypes,
@@ -12,12 +13,14 @@ import {
   phonePreferred,
   phoneTypes,
 } from './options';
-import Button from '../../components/button';
+import { ADMIN_URL } from '../../constant/url';
 import Input from '../../components/input';
+import Button from '../../components/button';
 import Select from '../../components/select';
 
-const defaultPersonalInformation = {
+const defaultUserProfileData = {
   firstName: '',
+  middleName: '',
   lastName: '',
   dateOfBirth: '',
   age: 0,
@@ -57,16 +60,43 @@ const defaultPersonalInformation = {
       toDate: '',
     },
   ],
+  incomes: [
+    {
+      type: 0,
+      amount: 0,
+    },
+  ],
+  assets: [
+    {
+      type: 0,
+      amount: 0,
+    },
+  ],
+  liabilities: [
+    {
+      type: 0,
+      amount: 0,
+    },
+  ],
+  wealthSources: [
+    {
+      type: 0,
+      amount: 0,
+    },
+  ],
+  total: 0,
+  experience: 0,
+  riskTolerance: 0,
 };
 
-const PersonalInformation = () => {
+const UserProfile = () => {
   const {
     handleSubmit,
     register,
     control,
     formState: { errors },
     reset,
-  } = useForm(defaultPersonalInformation);
+  } = useForm(defaultUserProfileData);
 
   const { fields: addressFields, append: appendAddress } = useFieldArray({
     control,
@@ -93,19 +123,23 @@ const PersonalInformation = () => {
     name: 'occupations',
   });
 
-  const { data } = usePersonalInformationQuery('0Y_F3Tk');
+  const { data } = useUserProfileByUserIdQuery('udP6zDJ');
 
-  const { mutateAsync: updatePersonalInformation, isPending } =
-    useUpdatePersonalInformationMutation();
+  const { mutateAsync: updateUserProfile, isPending } =
+    useUpdateUserProfileMutation();
+
+  const navigate = useNavigate();
+
+  const [editMode, setEditMode] = useState(false);
 
   useEffect(() => {
-    if (data?.data) {
-      reset(data.data);
+    if (data?.data[0]) {
+      reset(data.data[0]);
     }
   }, [data, reset]);
 
   const onSubmit = async (data) => {
-    await updatePersonalInformation({ id: '0Y_F3Tk', data });
+    await updateUserProfile({ id: '0Y_F3Tk', data });
   };
 
   const handleAddAddress = () => {
@@ -174,24 +208,31 @@ const PersonalInformation = () => {
             <Input
               label="First name"
               placeholder="Enter your first name"
+              required={true}
+              disabled={!editMode}
               error={errors.firstName?.message}
               {...register('firstName', { required: 'First name is required' })}
             />
             <Input
               label="Last Name"
               placeholder="Enter your last name"
+              required={true}
+              disabled={!editMode}
               error={errors.lastName?.message}
               {...register('lastName', { required: 'Last name is required' })}
             />
             <Input
               label="Middle Name"
               placeholder="Enter your middle name"
+              disabled={!editMode}
               {...register('middleName')}
             />
             <Input
               label="Date of Birth"
               type="date"
               error={errors.dateOfBirth?.message}
+              required={true}
+              disabled={!editMode}
               {...register('dateOfBirth', {
                 required: 'Date of birth is required',
               })}
@@ -200,6 +241,7 @@ const PersonalInformation = () => {
               label="Age"
               placeholder="Enter your age"
               type="number"
+              disabled={!editMode}
               {...register('age')}
             />
           </div>
@@ -218,15 +260,12 @@ const PersonalInformation = () => {
             <h4 className="text-md font-semibold mb-4">Addresses</h4>
             {addressFields.map((field, index) => {
               return (
-                <div
-                  key={field.id}
-                  className={`grid grid-cols-2 gap-4 ${
-                    index == addressFields.length - 1 ? '' : 'mb-4'
-                  }`}
-                >
+                <div key={field.id} className="grid grid-cols-2 gap-4 mb-4">
                   <Input
                     label="Country"
                     placeholder="Enter country"
+                    required={true}
+                    disabled={!editMode}
                     error={errors.addresses?.[index]?.country?.message}
                     {...register(`addresses.${index}.country`, {
                       required: 'Country is required',
@@ -235,6 +274,8 @@ const PersonalInformation = () => {
                   <Input
                     label="City"
                     placeholder="Enter city"
+                    required={true}
+                    disabled={!editMode}
                     error={errors.addresses?.[index]?.city?.message}
                     {...register(`addresses.${index}.city`, {
                       required: 'City is required',
@@ -243,6 +284,8 @@ const PersonalInformation = () => {
                   <Input
                     label="Street"
                     placeholder="Enter street"
+                    required={true}
+                    disabled={!editMode}
                     error={errors.addresses?.[index]?.street?.message}
                     {...register(`addresses.${index}.street`, {
                       required: 'Street is required',
@@ -251,12 +294,14 @@ const PersonalInformation = () => {
                   <Input
                     label="Postal Code"
                     placeholder="Enter postal code"
+                    disabled={!editMode}
                     error={errors.addresses?.[index]?.postalCode?.message}
                     {...register(`addresses.${index}.postalCode`)}
                   />
                   <Select
                     label="Type"
                     options={addressTypes}
+                    required={true}
                     error={errors.addresses?.[index]?.type?.message}
                     {...register(`addresses.${index}.type`, {
                       required: 'Address type is required',
@@ -272,16 +317,13 @@ const PersonalInformation = () => {
             <h4 className="text-md font-semibold mb-4">Emails</h4>
             {emailFields.map((field, index) => {
               return (
-                <div
-                  key={field.id}
-                  className={`grid grid-cols-2 gap-4 ${
-                    index == emailFields.length - 1 ? '' : 'mb-4'
-                  }`}
-                >
+                <div key={field.id} className="grid grid-cols-2 gap-4 mb-4">
                   <Input
                     label="Email Address"
                     placeholder="Enter email address"
                     type="email"
+                    required={true}
+                    disabled={!editMode}
                     error={errors.emails?.[index]?.email?.message}
                     {...register(`emails.${index}.email`, {
                       required: 'Email is required',
@@ -290,6 +332,8 @@ const PersonalInformation = () => {
                   <Select
                     label="Type"
                     options={emailTypes}
+                    required={true}
+                    disabled={!editMode}
                     error={errors.emails?.[index]?.type?.message}
                     {...register(`emails.${index}.type`, {
                       required: 'Email type is required',
@@ -298,6 +342,8 @@ const PersonalInformation = () => {
                   <Select
                     label="Preferred"
                     options={emailPreferred}
+                    required={true}
+                    disabled={!editMode}
                     error={errors.emails?.[index]?.preferred?.message}
                     {...register(`emails.${index}.preferred`, {
                       setValueAs: (value) => value === 'true' || value === true,
@@ -313,16 +359,13 @@ const PersonalInformation = () => {
             <h4 className="text-md font-semibold mb-4">Phones</h4>
             {phoneFields.map((field, index) => {
               return (
-                <div
-                  key={field.id}
-                  className={`grid grid-cols-2 gap-4 ${
-                    index == phoneFields.length - 1 ? '' : 'mb-4'
-                  }`}
-                >
+                <div key={field.id} className="grid grid-cols-2 gap-4 mb-4">
                   <Input
                     label="Phone Number"
                     placeholder="Enter phone number"
                     type="tel"
+                    required={true}
+                    disabled={!editMode}
                     error={errors.phones?.[index]?.phone?.message}
                     {...register(`phones.${index}.phone`, {
                       required: 'Phone number is required',
@@ -331,6 +374,8 @@ const PersonalInformation = () => {
                   <Select
                     label="Type"
                     options={phoneTypes}
+                    required={true}
+                    disabled={!editMode}
                     error={errors.phones?.[index]?.type?.message}
                     {...register(`phones.${index}.type`, {
                       required: 'Phone type is required',
@@ -339,6 +384,8 @@ const PersonalInformation = () => {
                   <Select
                     label="Preferred"
                     options={phonePreferred}
+                    required={true}
+                    disabled={!editMode}
                     error={errors.phones?.[index]?.preferred?.message}
                     {...register(`phones.${index}.preferred`, {
                       setValueAs: (value) => value === 'true' || value === true,
@@ -355,15 +402,12 @@ const PersonalInformation = () => {
             </h4>
             {documentFields.map((field, index) => {
               return (
-                <div
-                  key={field.id}
-                  className={`grid grid-cols-3 gap-4 ${
-                    index == documentFields.length - 1 ? '' : 'mb-4'
-                  }`}
-                >
+                <div key={field.id} className="grid grid-cols-3 gap-4 mb-4">
                   <Select
                     label="Type"
                     options={documentTypes}
+                    required={true}
+                    disabled={!editMode}
                     error={errors.documents?.[index]?.type?.message}
                     {...register(`documents.${index}.type`, {
                       required: 'Document type is required',
@@ -372,12 +416,19 @@ const PersonalInformation = () => {
                   <Input
                     label="Expiry Date"
                     type="date"
+                    required={true}
+                    disabled={!editMode}
                     error={errors.documents?.[index]?.expiryDate?.message}
                     {...register(`documents.${index}.expiryDate`, {
                       required: 'Expiry date is required',
                     })}
                   />
-                  <Input label="Uploaded Document" type="file" />
+                  <Input
+                    label="Uploaded Document"
+                    required={true}
+                    disabled={!editMode}
+                    type="file"
+                  />
                 </div>
               );
             })}
@@ -389,15 +440,12 @@ const PersonalInformation = () => {
             <h4 className="text-md font-semibold mb-4">Occupations</h4>
             {occupationFields.map((field, index) => {
               return (
-                <div
-                  key={field.id}
-                  className={`grid grid-cols-3 gap-4 ${
-                    index == occupationFields.length - 1 ? '' : 'mb-4'
-                  }`}
-                >
+                <div key={field.id} className="grid grid-cols-3 gap-4 mb-4">
                   <Input
                     label="Occupation"
                     placeholder="Enter occupation"
+                    required={true}
+                    disabled={!editMode}
                     error={errors.occupations?.[index]?.occupation?.message}
                     {...register(`occupations.${index}.occupation`, {
                       required: 'Occupation is required',
@@ -406,6 +454,8 @@ const PersonalInformation = () => {
                   <Input
                     label="From Date"
                     type="date"
+                    required={true}
+                    disabled={!editMode}
                     error={errors.occupations?.[index]?.fromDate?.message}
                     {...register(`occupations.${index}.fromDate`, {
                       required: 'From date is required',
@@ -414,6 +464,8 @@ const PersonalInformation = () => {
                   <Input
                     label="To Date"
                     type="date"
+                    required={true}
+                    disabled={!editMode}
                     error={errors.occupations?.[index]?.toDate?.message}
                     {...register(`occupations.${index}.toDate`, {
                       required: 'To date is required',
@@ -425,11 +477,32 @@ const PersonalInformation = () => {
             <Button handleClick={handleAddOccupation}>Add Occupation</Button>
           </div>
         </div>
+        <div className="text-right flex gap-2">
+          {!editMode ? (
+            <Button handleClick={() => setEditMode(true)}>Edit</Button>
+          ) : (
+            <>
+              <Button type="submit" isLoading={isPending} disabled={isPending}>
+                Save
+              </Button>
 
-        {/* Submit Button */}
-        <div className="text-right">
-          <Button type="submit" isLoading={isPending} disabled={isPending}>
-            Submit
+              <Button
+                handleClick={() => {
+                  reset(data.data);
+                  setEditMode(false);
+                }}
+                type="button"
+              >
+                Cancel
+              </Button>
+            </>
+          )}
+          <Button
+            handleClick={() => {
+              navigate(ADMIN_URL.KYC);
+            }}
+          >
+            KYC
           </Button>
         </div>
       </form>
@@ -437,4 +510,4 @@ const PersonalInformation = () => {
   );
 };
 
-export default PersonalInformation;
+export default UserProfile;

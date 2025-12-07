@@ -1,5 +1,5 @@
 const Dashboard = () => {
-  return <div>Dashboard</div>;
+  return <div>User KYC works!</div>;
 };
 
 export default Dashboard;

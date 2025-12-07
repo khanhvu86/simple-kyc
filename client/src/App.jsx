@@ -1,17 +1,22 @@
+import { useRoutes } from 'react-router';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { RouterProvider } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
-import Router from './routes';
+import { AuthProvider } from './context';
+import { AppRoutes } from './routes';
 import './App.css';
 
 const queryClient = new QueryClient();
 
 function App() {
+  const element = useRoutes(AppRoutes);
+
   return (
-    <QueryClientProvider client={queryClient}>
-      <RouterProvider router={Router} />
-      <ToastContainer position="top-right" autoClose={2000} />
-    </QueryClientProvider>
+    <AuthProvider>
+      <QueryClientProvider client={queryClient}>
+        {element}
+        <ToastContainer position="top-right" autoClose={2000} />
+      </QueryClientProvider>
+    </AuthProvider>
   );
 }
 

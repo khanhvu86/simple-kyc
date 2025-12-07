@@ -1,7 +1,7 @@
 import { useForm } from 'react-hook-form';
 import { useLoginMutation } from '../../hooks/use-login-mutation';
 import { useNavigate } from 'react-router';
-import { TOKEN } from '../../constant/auth';
+import { useAuthContext } from '../../hooks/use-auth-context';
 import { ADMIN_URL } from '../../constant/url';
 import Button from '../../components/button';
 import Checkbox from '../../components/checkbox';
@@ -16,16 +16,16 @@ const Login = () => {
   } = useForm();
 
   const navigate = useNavigate();
-
   const { mutateAsync: login, isPending, error, reset } = useLoginMutation();
+  const { saveAuthData } = useAuthContext();
 
   const onSubmit = async (data) => {
     const response = await login({
       email: data.email,
       password: data.password,
     });
-    const { accessToken } = response.data;
-    localStorage.setItem(TOKEN, accessToken);
+    const { accessToken, user } = response.data;
+    saveAuthData(accessToken, user);
     return navigate(ADMIN_URL.DASHBOARD);
   };
 

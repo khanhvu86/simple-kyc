@@ -11,6 +11,24 @@
       "email": "khanh123@gmail.com",
       "password": "$2a$10$0ZWLsSD5HafIyBn98gCryuZQQPyJBn6lWIiIc9HrlnHS.OYgNF1u2",
       "role": 0
+    },
+    {
+      "id": "A13bcD9",
+      "email": "linhtran98@gmail.com",
+      "password": "$2a$10$abc123abc123abc123abcOu12asdwqWeasdzxcvQwe123981hsd",
+      "role": 0
+    },
+    {
+      "id": "Jds8kLm",
+      "email": "hoangminh2000@gmail.com",
+      "password": "$2a$10$qwe0980qwe0980qwe0980PLMnjkasd9834JKHkjh0934kjh",
+      "role": 0
+    },
+    {
+      "id": "P0qwer7",
+      "email": "thuylee21@gmail.com",
+      "password": "$2a$10$poi098poi098poi098OPlkbn3098kjlJn3kjlnafds90",
+      "role": 0
     }
   ],
   "userProfiles": [
@@ -20,109 +38,338 @@
       "firstName": "Khanh",
       "middleName": "",
       "lastName": "Vu",
-      "dateOfBirth": "2025-12-02",
+      "dateOfBirth": "2003-05-21",
       "age": 22,
       "addresses": [
         {
           "country": "Vietnam",
           "city": "Hanoi",
-          "street": "Hang Dau",
+          "street": "Hang Dau Street",
           "postalCode": 10000,
-          "type": "1"
+          "type": 0
         },
         {
-          "country": "New country",
-          "city": "New city",
-          "street": "New street",
-          "postalCode": "12345",
-          "type": "1"
+          "country": "Vietnam",
+          "city": "Hanoi",
+          "street": "Ly Thuong Kiet Street",
+          "postalCode": 11500,
+          "type": 1
         }
       ],
       "emails": [
         {
           "email": "khanh123@gmail.com",
-          "type": "1",
-          "preferred": false
+          "type": 0,
+          "preferred": true
         }
       ],
       "phones": [
         {
           "phone": "0912345678",
-          "type": "1",
+          "type": 0,
           "preferred": false
         },
         {
           "phone": "0911122233",
-          "type": "0",
+          "type": 1,
           "preferred": true
         }
       ],
       "documents": [
         {
           "type": 0,
-          "expiryDate": "2025-12-02"
+          "expiryDate": "2030-01-01"
         },
         {
-          "type": "Passport",
-          "expiryDate": "2025-12-02"
+          "type": 1,
+          "expiryDate": "2032-05-12"
         }
       ],
       "occupations": [
         {
-          "occupation": "Employee",
-          "fromDate": "2025-12-16",
+          "occupation": "Software Engineer",
+          "fromDate": "2023-01-01",
           "toDate": "2025-12-15"
-        },
-        {
-          "occupation": "Manager",
-          "fromDate": "2025-12-10",
-          "toDate": "2025-12-02"
         }
       ],
       "incomes": [
         {
-          "type": 1,
-          "amount": 100.5
+          "type": 0,
+          "amount": 1500
         },
         {
-          "type": "0",
-          "amount": "110.2"
+          "type": 1,
+          "amount": 300
         }
       ],
       "assets": [
         {
           "type": 2,
-          "amount": 201.3
+          "amount": 20000
         },
         {
-          "type": "1",
-          "amount": "99"
+          "type": 1,
+          "amount": 5000
         }
       ],
       "liabilities": [
         {
           "type": 0,
-          "amount": 311.2
+          "amount": 3000
         },
         {
-          "type": "1",
-          "amount": "229"
+          "type": 1,
+          "amount": 2500
         }
       ],
       "wealthSources": [
         {
-          "type": "0",
-          "amount": 121.1
+          "type": 0,
+          "amount": 12000
         },
         {
-          "type": "1",
-          "amount": "123.3"
+          "type": 1,
+          "amount": 3000
+        },
+        {
+          "type": 0,
+          "amount": 100
         }
       ],
-      "total": 734.1,
-      "experience": "1",
+      "totalLiabilities": 5500,
+      "totalWealthSources": 15100,
+      "totalNetWorth": 36400,
+      "experience": 0,
       "riskTolerance": 0,
-      "submitDate": "12/7/2025",
+      "submitDate": "12/8/2025",
+      "status": 1
+    },
+    {
+      "id": "PRF001",
+      "userId": "A13bcD9",
+      "firstName": "Linh",
+      "middleName": "Thi",
+      "lastName": "Tran",
+      "dateOfBirth": "1998-09-12",
+      "age": 27,
+      "addresses": [
+        {
+          "country": "Vietnam",
+          "city": "Ho Chi Minh",
+          "street": "Nguyen Trai Street",
+          "postalCode": 700000,
+          "type": 0
+        }
+      ],
+      "emails": [
+        {
+          "email": "linhtran98@gmail.com",
+          "type": 0,
+          "preferred": true
+        }
+      ],
+      "phones": [
+        {
+          "phone": "0905123456",
+          "type": 0,
+          "preferred": true
+        }
+      ],
+      "documents": [
+        {
+          "type": 0,
+          "expiryDate": "2030-10-10"
+        }
+      ],
+      "occupations": [
+        {
+          "occupation": "Accountant",
+          "fromDate": "2021-03-01",
+          "toDate": "2025-12-31"
+        }
+      ],
+      "incomes": [
+        {
+          "type": 0,
+          "amount": 1200
+        }
+      ],
+      "assets": [
+        {
+          "type": 1,
+          "amount": 15000
+        }
+      ],
+      "liabilities": [
+        {
+          "type": 0,
+          "amount": 2000
+        }
+      ],
+      "wealthSources": [
+        {
+          "type": 1,
+          "amount": 5000
+        }
+      ],
+      "totalLiabilities": 2000,
+      "totalWealthSources": 5000,
+      "totalNetWorth": 19200,
+      "experience": 1,
+      "riskTolerance": 1,
+      "submitDate": "12/8/2025",
+      "status": 2
+    },
+    {
+      "id": "PRF002",
+      "userId": "Jds8kLm",
+      "firstName": "Minh",
+      "middleName": "",
+      "lastName": "Hoang",
+      "dateOfBirth": "2000-03-20",
+      "age": 25,
+      "addresses": [
+        {
+          "country": "Vietnam",
+          "city": "Da Nang",
+          "street": "Vo Nguyen Giap Street",
+          "postalCode": 550000,
+          "type": 0
+        }
+      ],
+      "emails": [
+        {
+          "email": "hoangminh2000@gmail.com",
+          "type": 0,
+          "preferred": true
+        }
+      ],
+      "phones": [
+        {
+          "phone": "0933445566",
+          "type": 0,
+          "preferred": true
+        }
+      ],
+      "documents": [
+        {
+          "type": 1,
+          "expiryDate": "2033-05-14"
+        }
+      ],
+      "occupations": [
+        {
+          "occupation": "Sales Executive",
+          "fromDate": "2022-06-01",
+          "toDate": "2025-12-31"
+        }
+      ],
+      "incomes": [
+        {
+          "type": 0,
+          "amount": 900
+        }
+      ],
+      "assets": [
+        {
+          "type": 1,
+          "amount": 8000
+        }
+      ],
+      "liabilities": [
+        {
+          "type": 0,
+          "amount": 1200
+        }
+      ],
+      "wealthSources": [
+        {
+          "type": 1,
+          "amount": 2500
+        }
+      ],
+      "totalLiabilities": 1200,
+      "totalWealthSources": 2500,
+      "totalNetWorth": 10200,
+      "experience": 0,
+      "riskTolerance": 2,
+      "submitDate": "12/8/2025",
+      "status": 0
+    },
+    {
+      "id": "PRF003",
+      "userId": "P0qwer7",
+      "firstName": "Thuy",
+      "middleName": "Ngoc",
+      "lastName": "Le",
+      "dateOfBirth": "2001-01-14",
+      "age": 24,
+      "addresses": [
+        {
+          "country": "Vietnam",
+          "city": "Hanoi",
+          "street": "Tran Duy Hung Street",
+          "postalCode": 100800,
+          "type": 0
+        }
+      ],
+      "emails": [
+        {
+          "email": "thuylee21@gmail.com",
+          "type": 0,
+          "preferred": true
+        }
+      ],
+      "phones": [
+        {
+          "phone": "0988776655",
+          "type": 0,
+          "preferred": true
+        }
+      ],
+      "documents": [
+        {
+          "type": 0,
+          "expiryDate": "2031-03-30"
+        }
+      ],
+      "occupations": [
+        {
+          "occupation": "Graphic Designer",
+          "fromDate": "2020-10-01",
+          "toDate": "2025-12-31"
+        }
+      ],
+      "incomes": [
+        {
+          "type": 0,
+          "amount": 1000
+        }
+      ],
+      "assets": [
+        {
+          "type": 1,
+          "amount": 6000
+        }
+      ],
+      "liabilities": [
+        {
+          "type": 0,
+          "amount": 1000
+        }
+      ],
+      "wealthSources": [
+        {
+          "type": 1,
+          "amount": 2000
+        }
+      ],
+      "totalLiabilities": 1000,
+      "totalWealthSources": 2000,
+      "totalNetWorth": 8000,
+      "experience": 0,
+      "riskTolerance": 1,
+      "submitDate": "12/8/2025",
       "status": 0
     }
   ]

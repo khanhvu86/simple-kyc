@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   useUnreviewedSubmissionsQuery,
   useReviewedSubmissionsQuery,
@@ -6,9 +7,10 @@ import {
   useUserProfileByUserIdQuery,
 } from '../../hooks/user-profile';
 import { USER_PROFILE_STATUS, USER_ROLE } from '../../constant/user';
+import { ADMIN_URL } from '../../constant/url';
+import { useAuthContext } from '../../hooks/use-auth-context';
 import ConfirmDialog from '../../components/confirm-dialog';
 import Button from '../../components/button';
-import { useAuthContext } from '../../hooks/use-auth-context';
 
 const statuses = [
   {
@@ -42,16 +44,18 @@ const filters = [
 ];
 
 const Submissions = () => {
+  const navigate = useNavigate();
   const [filter, setFilter] = useState('unreviewed');
   const [submissions, setSubmissions] = useState([]);
   const { user } = useAuthContext();
   const isNormalUser = user.role === USER_ROLE.NORMAL_USER;
 
-  const mySubmisson = useUserProfileByUserIdQuery('udP6zDJ');
+  const mySubmisson = useUserProfileByUserIdQuery(user.id);
   const unreviewedQuery = useUnreviewedSubmissionsQuery();
   const reviewedQuery = useReviewedSubmissionsQuery();
 
-  const { mutateAsync: updateUserProfile } = useUpdateUserProfileMutation();
+  const { mutateAsync: updateUserProfile, isPending } =
+    useUpdateUserProfileMutation();
 
   const [dialogOpen, setDialogOpen] = useState(false);
   const [selectedAction, setSelectedAction] = useState(null);
@@ -73,7 +77,13 @@ const Submissions = () => {
     ) {
       setSubmissions(reviewedQuery.data.data);
     }
-  }, [filter, unreviewedQuery.data, reviewedQuery.data]);
+  }, [
+    filter,
+    unreviewedQuery.data,
+    reviewedQuery.data,
+    mySubmisson.data,
+    isNormalUser,
+  ]);
 
   const openDialog = (submission, action) => {
     setSelectedSubmission(submission);
@@ -96,6 +106,10 @@ const Submissions = () => {
     });
 
     setDialogOpen(false);
+  };
+
+  const handleRowClick = (id) => {
+    navigate(ADMIN_URL.KYC.replace(':userId', id));
   };
 
   return (
@@ -140,7 +154,11 @@ const Submissions = () => {
               const status = statuses[submission.status];
 
               return (
-                <tr key={submission.id} className="border-b border-gray-200">
+                <tr
+                  key={submission.id}
+                  className="border-b border-gray-200 hover:bg-gray-50 transition cursor-pointer"
+                  onClick={() => handleRowClick(submission.userId)}
+                >
                   <td className="px-6 py-4">
                     {`${submission.firstName} ${submission.middleName} ${submission.lastName}`}
                   </td>
@@ -161,7 +179,10 @@ const Submissions = () => {
                       <button
                         className="px-4 py-1 text-green-800 font-medium border border-green-400 rounded-md 
                         hover:bg-green-50 transition cursor-pointer"
-                        onClick={() => openDialog(submission, 'approve')}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          openDialog(submission, 'approve');
+                        }}
                       >
                         Approve
                       </button>
@@ -169,7 +190,10 @@ const Submissions = () => {
                       <button
                         className="px-4 py-1 text-red-800 font-medium border border-red-400 rounded-md 
                         hover:bg-red-50 transition cursor-pointer"
-                        onClick={() => openDialog(submission, 'reject')}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          openDialog(submission, 'reject');
+                        }}
                       >
                         Reject
                       </button>
@@ -191,6 +215,7 @@ const Submissions = () => {
             ? 'Are you sure you want to approve this submission?'
             : 'Are you sure you want to reject this submission?'
         }
+        isPending={isPending}
       />
     </div>
   );

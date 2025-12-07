@@ -3,6 +3,7 @@ import { useLoginMutation } from '../../hooks/use-login-mutation';
 import { useNavigate } from 'react-router';
 import { useAuthContext } from '../../hooks/use-auth-context';
 import { ADMIN_URL } from '../../constant/url';
+import { USER_ROLE } from '../../constant/user';
 import Button from '../../components/button';
 import Checkbox from '../../components/checkbox';
 import Input from '../../components/input';
@@ -26,7 +27,11 @@ const Login = () => {
     });
     const { accessToken, user } = response.data;
     saveAuthData(accessToken, user);
-    return navigate(ADMIN_URL.DASHBOARD);
+    if (user.role === USER_ROLE.NORMAL_USER) {
+      return navigate(ADMIN_URL.USER_PROFILE.replace(':userId', user.id));
+    } else {
+      return navigate(ADMIN_URL.SUBMISSIONS);
+    }
   };
 
   watch(() => {

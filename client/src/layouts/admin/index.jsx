@@ -16,7 +16,7 @@ const AdminLayout = () => {
             key: 'my-profile',
             icon: <User />,
             label: 'My Profile',
-            url: ADMIN_URL.USER_PROFILE,
+            url: ADMIN_URL.USER_PROFILE.replace(':userId', user.id),
           },
           {
             key: 'my-submissions',

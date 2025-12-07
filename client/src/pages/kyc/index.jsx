@@ -1,5 +1,6 @@
 import { useFieldArray, useForm } from 'react-hook-form';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { X } from 'lucide-react';
 import {
   useUpdateUserProfileMutation,
   useUserProfileByUserIdQuery,
@@ -17,12 +18,13 @@ import {
   marketsExperience,
   riskToleranceNumber,
   wealthSourceTypes,
-} from './options';
+} from '../../constant/options';
+import { USER_PROFILE_STATUS, USER_ROLE } from '../../constant/user';
+import { useParams } from 'react-router';
 import Button from '../../components/button';
 import Input from '../../components/input';
 import Select from '../../components/select';
-import { USER_PROFILE_STATUS } from '../../constant/user';
-import { X } from 'lucide-react';
+import { useAuthContext } from '../../hooks/use-auth-context';
 
 const defaultUserProfileData = {
   firstName: '',
@@ -102,58 +104,100 @@ const KYC = () => {
     control,
     formState: { errors },
     reset,
+    watch,
+    setValue,
   } = useForm(defaultUserProfileData);
 
-  const { fields: addressFields, append: appendAddress } = useFieldArray({
+  const {
+    fields: addressFields,
+    append: appendAddress,
+    remove: removeAddress,
+  } = useFieldArray({
     control,
     name: 'addresses',
   });
 
-  const { fields: emailFields, append: appendEmail } = useFieldArray({
+  const {
+    fields: emailFields,
+    append: appendEmail,
+    remove: removeEmail,
+  } = useFieldArray({
     control,
     name: 'emails',
   });
 
-  const { fields: phoneFields, append: appendPhone } = useFieldArray({
+  const {
+    fields: phoneFields,
+    append: appendPhone,
+    remove: removePhone,
+  } = useFieldArray({
     control,
     name: 'phones',
   });
 
-  const { fields: documentFields, append: appendDocument } = useFieldArray({
+  const {
+    fields: documentFields,
+    append: appendDocument,
+    remove: removeDocument,
+  } = useFieldArray({
     control,
     name: 'documents',
   });
 
-  const { fields: occupationFields, append: appendOccupation } = useFieldArray({
+  const {
+    fields: occupationFields,
+    append: appendOccupation,
+    remove: removeOccupation,
+  } = useFieldArray({
     control,
     name: 'occupations',
   });
 
-  const { fields: incomeFields, append: appendIncome } = useFieldArray({
+  const {
+    fields: incomeFields,
+    append: appendIncome,
+    remove: removeIncome,
+  } = useFieldArray({
     control,
     name: 'incomes',
   });
 
-  const { fields: assetFields, append: appendAsset } = useFieldArray({
+  const {
+    fields: assetFields,
+    append: appendAsset,
+    remove: removeAsset,
+  } = useFieldArray({
     control,
     name: 'assets',
   });
 
-  const { fields: liabilityFields, append: appendLiability } = useFieldArray({
+  const {
+    fields: liabilityFields,
+    append: appendLiability,
+    remove: removeLiability,
+  } = useFieldArray({
     control,
     name: 'liabilities',
   });
 
-  const { fields: wealthSourceFields, append: appendWealthSource } =
-    useFieldArray({
-      control,
-      name: 'wealthSources',
-    });
+  const {
+    fields: wealthSourceFields,
+    append: appendWealthSource,
+    remove: removeWealthSource,
+  } = useFieldArray({
+    control,
+    name: 'wealthSources',
+  });
 
-  const { data } = useUserProfileByUserIdQuery('udP6zDJ');
+  const { userId } = useParams();
+
+  const { data } = useUserProfileByUserIdQuery(userId);
 
   const { mutateAsync: updateUserProfile, isPending } =
     useUpdateUserProfileMutation();
+
+  const { user } = useAuthContext();
+  const isOfficer = user.role === USER_ROLE.OFFICER;
 
   useEffect(() => {
     if (data?.data[0]) {
@@ -161,10 +205,46 @@ const KYC = () => {
     }
   }, [data, reset]);
 
+  const watchedValues = watch();
+
+  useEffect(() => {
+    const liabilities = watchedValues.liabilities || [];
+    const assets = watchedValues.assets || [];
+    const incomes = watchedValues.incomes || [];
+    const wealthSources = watchedValues.wealthSources || [];
+
+    const totalLiabilities = liabilities.reduce(
+      (sum, item) => sum + (Number(item?.amount) || 0),
+      0
+    );
+
+    const totalAssets = assets.reduce(
+      (sum, item) => sum + (Number(item?.amount) || 0),
+      0
+    );
+
+    const totalIncomes = incomes.reduce(
+      (sum, item) => sum + (Number(item?.amount) || 0),
+      0
+    );
+
+    const totalWealthSources = wealthSources.reduce(
+      (sum, item) => sum + (Number(item?.amount) || 0),
+      0
+    );
+
+    const totalNetWorth =
+      totalAssets + totalIncomes + totalWealthSources - totalLiabilities;
+
+    setValue('totalLiabilities', totalLiabilities);
+    setValue('totalWealthSources', totalWealthSources);
+    setValue('totalNetWorth', totalNetWorth);
+  }, [watchedValues, setValue]);
+
   const onSubmit = async (data) => {
     data.submitDate = new Date().toLocaleDateString();
     data.status = USER_PROFILE_STATUS.PENDING;
-    await updateUserProfile({ id: '0Y_F3Tk', data });
+    await updateUserProfile({ id: data.id, data });
   };
 
   const handleAddAddress = () => {
@@ -262,6 +342,7 @@ const KYC = () => {
               label="First name"
               placeholder="Enter your first name"
               required={true}
+              disabled={isOfficer}
               error={errors.firstName?.message}
               {...register('firstName', { required: 'First name is required' })}
             />
@@ -269,19 +350,22 @@ const KYC = () => {
               label="Last Name"
               placeholder="Enter your last name"
               required={true}
+              disabled={isOfficer}
               error={errors.lastName?.message}
               {...register('lastName', { required: 'Last name is required' })}
             />
             <Input
               label="Middle Name"
               placeholder="Enter your middle name"
+              disabled={isOfficer}
               {...register('middleName')}
             />
             <Input
               label="Date of Birth"
               type="date"
-              error={errors.dateOfBirth?.message}
               required={true}
+              disabled={isOfficer}
+              error={errors.dateOfBirth?.message}
               {...register('dateOfBirth', {
                 required: 'Date of birth is required',
               })}
@@ -290,6 +374,7 @@ const KYC = () => {
               label="Age"
               placeholder="Enter your age"
               type="number"
+              disabled={isOfficer}
               {...register('age')}
             />
           </div>
@@ -314,20 +399,22 @@ const KYC = () => {
                 >
                   <div className="header-panel text-sm flex items-center gap-2 absolute -top-4">
                     <span className="font-medium">Address #{index + 1}</span>
-                    <button
-                      type="button"
-                      onClick={() => removeAddress(index)}
-                      className="text-red-500 text-sm hover:text-red-700 cursor-pointer"
-                    >
-                      <X size={18} />
-                    </button>
+                    {!isOfficer && (
+                      <button
+                        type="button"
+                        onClick={() => removeAddress(index)}
+                        className="text-red-500 text-sm hover:text-red-700 cursor-pointer"
+                      >
+                        <X size={18} />
+                      </button>
+                    )}
                   </div>
-
                   <div className="grid grid-cols-2 gap-4 mt-4">
                     <Input
                       label="Country"
                       placeholder="Enter country"
                       required={true}
+                      disabled={isOfficer}
                       error={errors.addresses?.[index]?.country?.message}
                       {...register(`addresses.${index}.country`, {
                         required: 'Country is required',
@@ -337,6 +424,7 @@ const KYC = () => {
                       label="City"
                       placeholder="Enter city"
                       required={true}
+                      disabled={isOfficer}
                       error={errors.addresses?.[index]?.city?.message}
                       {...register(`addresses.${index}.city`, {
                         required: 'City is required',
@@ -346,6 +434,7 @@ const KYC = () => {
                       label="Street"
                       placeholder="Enter street"
                       required={true}
+                      disabled={isOfficer}
                       error={errors.addresses?.[index]?.street?.message}
                       {...register(`addresses.${index}.street`, {
                         required: 'Street is required',
@@ -354,6 +443,7 @@ const KYC = () => {
                     <Input
                       label="Postal Code"
                       placeholder="Enter postal code"
+                      disabled={isOfficer}
                       error={errors.addresses?.[index]?.postalCode?.message}
                       {...register(`addresses.${index}.postalCode`)}
                     />
@@ -361,6 +451,7 @@ const KYC = () => {
                       label="Type"
                       options={addressTypes}
                       required={true}
+                      disabled={isOfficer}
                       error={errors.addresses?.[index]?.type?.message}
                       {...register(`addresses.${index}.type`, {
                         required: 'Address type is required',
@@ -370,7 +461,9 @@ const KYC = () => {
                 </div>
               );
             })}
-            <Button handleClick={handleAddAddress}>Add Address</Button>
+            {!isOfficer && (
+              <Button handleClick={handleAddAddress}>Add Address</Button>
+            )}
           </div>
           {/* Emails Panel */}
           <div className="panel mb-6">
@@ -383,13 +476,15 @@ const KYC = () => {
                 >
                   <div className="header-panel text-sm flex items-center gap-2 absolute -top-4">
                     <span className="font-medium">Email #{index + 1}</span>
-                    <button
-                      type="button"
-                      onClick={() => removeAddress(index)}
-                      className="text-red-500 text-sm hover:text-red-700 cursor-pointer"
-                    >
-                      <X size={18} />
-                    </button>
+                    {!isOfficer && (
+                      <button
+                        type="button"
+                        onClick={() => removeAddress(index)}
+                        className="text-red-500 text-sm hover:text-red-700 cursor-pointer"
+                      >
+                        <X size={18} />
+                      </button>
+                    )}
                   </div>
                   <div className="grid grid-cols-2 gap-4 mt-4">
                     <Input
@@ -397,6 +492,7 @@ const KYC = () => {
                       placeholder="Enter email address"
                       type="email"
                       required={true}
+                      disabled={isOfficer}
                       error={errors.emails?.[index]?.email?.message}
                       {...register(`emails.${index}.email`, {
                         required: 'Email is required',
@@ -406,6 +502,7 @@ const KYC = () => {
                       label="Type"
                       options={emailTypes}
                       required={true}
+                      disabled={isOfficer}
                       error={errors.emails?.[index]?.type?.message}
                       {...register(`emails.${index}.type`, {
                         required: 'Email type is required',
@@ -415,6 +512,7 @@ const KYC = () => {
                       label="Preferred"
                       options={emailPreferred}
                       required={true}
+                      disabled={isOfficer}
                       error={errors.emails?.[index]?.preferred?.message}
                       {...register(`emails.${index}.preferred`, {
                         setValueAs: (value) =>
@@ -425,7 +523,9 @@ const KYC = () => {
                 </div>
               );
             })}
-            <Button handleClick={handleAddEmail}>Add Email</Button>
+            {!isOfficer && (
+              <Button handleClick={handleAddEmail}>Add Email</Button>
+            )}
           </div>
           {/* Phones Panel  */}
           <div className="panel mb-6">
@@ -438,13 +538,15 @@ const KYC = () => {
                 >
                   <div className="header-panel text-sm flex items-center gap-2 absolute -top-4">
                     <span className="font-medium">Phone #{index + 1}</span>
-                    <button
-                      type="button"
-                      onClick={() => removeAddress(index)}
-                      className="text-red-500 text-sm hover:text-red-700 cursor-pointer"
-                    >
-                      <X size={18} />
-                    </button>
+                    {!isOfficer && (
+                      <button
+                        type="button"
+                        onClick={() => removeAddress(index)}
+                        className="text-red-500 text-sm hover:text-red-700 cursor-pointer"
+                      >
+                        <X size={18} />
+                      </button>
+                    )}
                   </div>
                   <div className="grid grid-cols-2 gap-4 mt-4">
                     <Input
@@ -452,6 +554,7 @@ const KYC = () => {
                       placeholder="Enter phone number"
                       type="tel"
                       required={true}
+                      disabled={isOfficer}
                       error={errors.phones?.[index]?.phone?.message}
                       {...register(`phones.${index}.phone`, {
                         required: 'Phone number is required',
@@ -461,6 +564,7 @@ const KYC = () => {
                       label="Type"
                       options={phoneTypes}
                       required={true}
+                      disabled={isOfficer}
                       error={errors.phones?.[index]?.type?.message}
                       {...register(`phones.${index}.type`, {
                         required: 'Phone type is required',
@@ -470,6 +574,7 @@ const KYC = () => {
                       label="Preferred"
                       options={phonePreferred}
                       required={true}
+                      disabled={isOfficer}
                       error={errors.phones?.[index]?.preferred?.message}
                       {...register(`phones.${index}.preferred`, {
                         setValueAs: (value) =>
@@ -480,7 +585,9 @@ const KYC = () => {
                 </div>
               );
             })}
-            <Button handleClick={handleAddPhone}>Add Phone</Button>
+            {!isOfficer && (
+              <Button handleClick={handleAddPhone}>Add Phone</Button>
+            )}
           </div>
           <div className="panel mb-6">
             <h4 className="text-md font-semibold mb-8">
@@ -494,19 +601,22 @@ const KYC = () => {
                 >
                   <div className="header-panel text-sm flex items-center gap-2 absolute -top-4">
                     <span className="font-medium">Document #{index + 1}</span>
-                    <button
-                      type="button"
-                      onClick={() => removeAddress(index)}
-                      className="text-red-500 text-sm hover:text-red-700 cursor-pointer"
-                    >
-                      <X size={18} />
-                    </button>
+                    {!isOfficer && (
+                      <button
+                        type="button"
+                        onClick={() => removeAddress(index)}
+                        className="text-red-500 text-sm hover:text-red-700 cursor-pointer"
+                      >
+                        <X size={18} />
+                      </button>
+                    )}
                   </div>
                   <div className="grid grid-cols-3 gap-4 mt-4">
                     <Select
                       label="Type"
                       options={documentTypes}
                       required={true}
+                      disabled={isOfficer}
                       error={errors.documents?.[index]?.type?.message}
                       {...register(`documents.${index}.type`, {
                         required: 'Document type is required',
@@ -516,6 +626,7 @@ const KYC = () => {
                       label="Expiry Date"
                       type="date"
                       required={true}
+                      disabled={isOfficer}
                       error={errors.documents?.[index]?.expiryDate?.message}
                       {...register(`documents.${index}.expiryDate`, {
                         required: 'Expiry date is required',
@@ -530,9 +641,11 @@ const KYC = () => {
                 </div>
               );
             })}
-            <Button handleClick={handleAddDocument}>
-              Add Identification Document
-            </Button>
+            {!isOfficer && (
+              <Button handleClick={handleAddDocument}>
+                Add Identification Document
+              </Button>
+            )}
           </div>
           <div className="panel">
             <h4 className="text-md font-semibold mb-8">Occupations</h4>
@@ -544,19 +657,22 @@ const KYC = () => {
                 >
                   <div className="header-panel text-sm flex items-center gap-2 absolute -top-4">
                     <span className="font-medium">Occupation #{index + 1}</span>
-                    <button
-                      type="button"
-                      onClick={() => removeAddress(index)}
-                      className="text-red-500 text-sm hover:text-red-700 cursor-pointer"
-                    >
-                      <X size={18} />
-                    </button>
+                    {!isOfficer && (
+                      <button
+                        type="button"
+                        onClick={() => removeAddress(index)}
+                        className="text-red-500 text-sm hover:text-red-700 cursor-pointer"
+                      >
+                        <X size={18} />
+                      </button>
+                    )}
                   </div>
                   <div key={field.id} className="grid grid-cols-3 gap-4 mt-4">
                     <Input
                       label="Occupation"
                       placeholder="Enter occupation"
                       required={true}
+                      disabled={isOfficer}
                       error={errors.occupations?.[index]?.occupation?.message}
                       {...register(`occupations.${index}.occupation`, {
                         required: 'Occupation is required',
@@ -566,6 +682,7 @@ const KYC = () => {
                       label="From Date"
                       type="date"
                       required={true}
+                      disabled={isOfficer}
                       error={errors.occupations?.[index]?.fromDate?.message}
                       {...register(`occupations.${index}.fromDate`, {
                         required: 'From date is required',
@@ -575,6 +692,7 @@ const KYC = () => {
                       label="To Date"
                       type="date"
                       required={true}
+                      disabled={isOfficer}
                       error={errors.occupations?.[index]?.toDate?.message}
                       {...register(`occupations.${index}.toDate`, {
                         required: 'To date is required',
@@ -584,7 +702,9 @@ const KYC = () => {
                 </div>
               );
             })}
-            <Button handleClick={handleAddOccupation}>Add Occupation</Button>
+            {!isOfficer && (
+              <Button handleClick={handleAddOccupation}>Add Occupation</Button>
+            )}
           </div>
         </div>
 
@@ -604,18 +724,21 @@ const KYC = () => {
               >
                 <div className="header-panel text-sm flex items-center gap-2 absolute -top-4">
                   <span className="font-medium">Income #{index + 1}</span>
-                  <button
-                    type="button"
-                    onClick={() => removeAddress(index)}
-                    className="text-red-500 text-sm hover:text-red-700 cursor-pointer"
-                  >
-                    <X size={18} />
-                  </button>
+                  {!isOfficer && (
+                    <button
+                      type="button"
+                      onClick={() => removeAddress(index)}
+                      className="text-red-500 text-sm hover:text-red-700 cursor-pointer"
+                    >
+                      <X size={18} />
+                    </button>
+                  )}
                 </div>
                 <div className="grid grid-cols-2 gap-4 mt-4">
                   <Select
                     label="Type"
                     options={incomeTypes}
+                    disabled={isOfficer}
                     error={errors.incomes?.[index]?.type?.message}
                     {...register(`incomes.${index}.type`, {
                       required: 'Income type is required',
@@ -625,6 +748,7 @@ const KYC = () => {
                     label="Amount (Currency)"
                     placeholder="Enter amount"
                     type="number"
+                    disabled={isOfficer}
                     error={errors.incomes?.[index]?.amount?.message}
                     {...register(`incomes.${index}.amount`, {
                       required: 'Income amount is required',
@@ -634,7 +758,9 @@ const KYC = () => {
               </div>
             );
           })}
-          <Button handleClick={handleAddIncome}>Add Income</Button>
+          {!isOfficer && (
+            <Button handleClick={handleAddIncome}>Add Income</Button>
+          )}
         </div>
 
         {/* Assets Section */}
@@ -653,18 +779,21 @@ const KYC = () => {
               >
                 <div className="header-panel text-sm flex items-center gap-2 absolute -top-4">
                   <span className="font-medium">Asset #{index + 1}</span>
-                  <button
-                    type="button"
-                    onClick={() => removeAddress(index)}
-                    className="text-red-500 text-sm hover:text-red-700 cursor-pointer"
-                  >
-                    <X size={18} />
-                  </button>
+                  {!isOfficer && (
+                    <button
+                      type="button"
+                      onClick={() => removeAddress(index)}
+                      className="text-red-500 text-sm hover:text-red-700 cursor-pointer"
+                    >
+                      <X size={18} />
+                    </button>
+                  )}
                 </div>
                 <div className="grid grid-cols-2 gap-4 mt-4">
                   <Select
                     label="Type"
                     options={assetsTypes}
+                    disabled={isOfficer}
                     error={errors.assets?.[index]?.type?.message}
                     {...register(`assets.${index}.type`, {
                       required: 'Asset type is required',
@@ -674,6 +803,7 @@ const KYC = () => {
                     label="Amount (Currency)"
                     placeholder="Enter amount"
                     type="number"
+                    disabled={isOfficer}
                     error={errors.assets?.[index]?.amount?.message}
                     {...register(`assets.${index}.amount`, {
                       required: 'Asset amount is required',
@@ -683,7 +813,9 @@ const KYC = () => {
               </div>
             );
           })}
-          <Button handleClick={handleAddAsset}>Add Asset</Button>
+          {!isOfficer && (
+            <Button handleClick={handleAddAsset}>Add Asset</Button>
+          )}
         </div>
 
         {/* Liabilities Section */}
@@ -707,18 +839,21 @@ const KYC = () => {
               >
                 <div className="header-panel text-sm flex items-center gap-2 absolute -top-4">
                   <span className="font-medium">Liability #{index + 1}</span>
-                  <button
-                    type="button"
-                    onClick={() => removeAddress(index)}
-                    className="text-red-500 text-sm hover:text-red-700 cursor-pointer"
-                  >
-                    <X size={18} />
-                  </button>
+                  {!isOfficer && (
+                    <button
+                      type="button"
+                      onClick={() => removeAddress(index)}
+                      className="text-red-500 text-sm hover:text-red-700 cursor-pointer"
+                    >
+                      <X size={18} />
+                    </button>
+                  )}
                 </div>
                 <div className="grid grid-cols-2 gap-4 mb-4">
                   <Select
                     label="Type"
                     options={liabilityTypes}
+                    disabled={isOfficer}
                     error={errors.liabilities?.[index]?.type?.message}
                     {...register(`liabilities.${index}.type`, {
                       required: 'Liability type is required',
@@ -728,23 +863,30 @@ const KYC = () => {
                     label="Amount (Currency)"
                     placeholder="Enter amount"
                     type="number"
+                    disabled={isOfficer}
                     error={errors.liabilities?.[index]?.amount?.message}
                     {...register(`liabilities.${index}.amount`, {
                       required: 'Liability amount is required',
                     })}
                   />
-                  <div className="mt-4">
-                    <Input
-                      label="Total Liabilities"
-                      placeholder="Calculated Total"
-                      type="number"
-                    />
-                  </div>
                 </div>
               </div>
             );
           })}
-          <Button handleClick={handleAddLiability}>Add Liability</Button>
+          <div className="mb-8">
+            <Input
+              label="Total Liabilities"
+              placeholder="Calculated Total"
+              type="number"
+              disabled={true}
+              {...register('totalLiabilities')}
+            />
+          </div>
+          {!isOfficer && (
+            <Button handleClick={handleAddLiability} disabled={isOfficer}>
+              Add Liability
+            </Button>
+          )}
         </div>
 
         {/* Source of Wealth Section */}
@@ -770,19 +912,22 @@ const KYC = () => {
                   <span className="font-medium">
                     Wealth source #{index + 1}
                   </span>
-                  <button
-                    type="button"
-                    onClick={() => removeAddress(index)}
-                    className="text-red-500 text-sm hover:text-red-700 cursor-pointer"
-                  >
-                    <X size={18} />
-                  </button>
+                  {!isOfficer && (
+                    <button
+                      type="button"
+                      onClick={() => removeAddress(index)}
+                      className="text-red-500 text-sm hover:text-red-700 cursor-pointer"
+                    >
+                      <X size={18} />
+                    </button>
+                  )}
                 </div>
                 <div className="grid grid-cols-2 gap-4 mt-4">
                   <Select
                     label="Type"
                     options={wealthSourceTypes}
                     error={errors.wealthSources?.[index]?.type?.message}
+                    disabled={isOfficer}
                     {...register(`wealthSources.${index}.type`, {
                       required: 'Source of wealth type is required',
                     })}
@@ -791,25 +936,30 @@ const KYC = () => {
                     label="Amount (Currency)"
                     placeholder="Enter amount"
                     type="number"
+                    disabled={isOfficer}
                     error={errors.wealthSources?.[index]?.amount?.message}
                     {...register(`wealthSources.${index}.amount`, {
                       required: 'Source of wealth amount is required',
                     })}
                   />
-                  <div className="mt-4">
-                    <Input
-                      label="Total Source of Wealth"
-                      placeholder="Calculated Total"
-                      type="number"
-                    />
-                  </div>
                 </div>
               </div>
             );
           })}
-          <Button handleClick={handleAddWealthSource}>
-            Add Source of Wealth
-          </Button>
+          <div className="mb-8">
+            <Input
+              label="Total Source of Wealth"
+              placeholder="Calculated Total"
+              type="number"
+              disabled={true}
+              {...register('totalWealthSources')}
+            />
+          </div>
+          {!isOfficer && (
+            <Button handleClick={handleAddWealthSource} disabled={isOfficer}>
+              Add Source of Wealth
+            </Button>
+          )}
         </div>
 
         {/* Net Worth Section */}
@@ -824,7 +974,8 @@ const KYC = () => {
             <Input
               label="Total"
               placeholder="Automatically calculated"
-              {...register('total')}
+              {...register('totalNetWorth')}
+              disabled={true}
             />
           </div>
         </div>
@@ -841,11 +992,13 @@ const KYC = () => {
             <Select
               label="Experience in Financial Markets"
               options={marketsExperience}
+              disabled={isOfficer}
               {...register('experience')}
             />
             <Select
               label="Type"
               options={riskToleranceNumber}
+              disabled={isOfficer}
               {...register('riskTolerance')}
             />
           </div>
@@ -853,9 +1006,11 @@ const KYC = () => {
 
         {/* Submit Button */}
         <div className="text-right">
-          <Button type="submit" isLoading={isPending} disabled={isPending}>
-            Submit
-          </Button>
+          {!isOfficer && (
+            <Button type="submit" isLoading={isPending} disabled={isPending}>
+              Submit
+            </Button>
+          )}
         </div>
       </form>
     </div>

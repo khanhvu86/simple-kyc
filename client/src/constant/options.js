@@ -1,15 +1,15 @@
 import {
+  ADDRESS_TYPES,
   ASSET_TYPES,
+  DOCUMENT_TYPES,
+  EMAIL_TYPES,
   INCOME_TYPES,
   LIABILITY_TYPES,
   MARKETS_EXPERIENCE,
+  PHONE_TYPES,
   RISK_TOLERANCE_NUMBER,
   WEALTH_SOURCE_TYPES,
-  ADDRESS_TYPES,
-  DOCUMENT_TYPES,
-  EMAIL_TYPES,
-  PHONE_TYPES,
-} from './constant';
+} from './enums';
 
 export const addressTypes = [
   {
@@ -85,7 +85,7 @@ export const documentTypes = [
   {
     key: 'passport',
     text: 'Passport',
-    valie: DOCUMENT_TYPES.PASSPORT,
+    value: DOCUMENT_TYPES.PASSPORT,
   },
   {
     key: 'driverLicense',

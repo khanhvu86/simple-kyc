@@ -4,6 +4,7 @@ export const Button = (props) => {
     type = 'button',
     handleClick,
     isLoading = false,
+    disabled = false,
     ...rest
   } = props;
 
@@ -13,6 +14,7 @@ export const Button = (props) => {
       className="btn-primary px-4 py-2 rounded-md cursor-pointer flex items-center gap-3"
       {...rest}
       onClick={handleClick}
+      disabled={disabled}
     >
       {isLoading && (
         <div

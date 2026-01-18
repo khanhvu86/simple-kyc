@@ -2,11 +2,11 @@
 
 A web-based KYC (Know Your Customer) submission and review system built with React.js and JSON Server.
 
-## 📋 Overview
+## Overview
 
 This application allows users to submit their financial and personal information for KYC verification, and enables officers to review and approve/reject submissions.
 
-## 🚀 Technologies Used
+## Technologies Used
 
 - **Frontend**: React.js with React Router
 - **Backend**: JSON Server (Mock REST API)
@@ -14,7 +14,7 @@ This application allows users to submit their financial and personal information
 - **Styling**: Tailwind CSS
 - **Icons**: Lucide React
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 project-root/
@@ -29,7 +29,7 @@ project-root/
 └── README.md
 ```
 
-## 🛠️ Installation
+## Installation
 
 ### Prerequisites
 
@@ -58,7 +58,7 @@ project-root/
    npm install
    ```
 
-## ▶️ Running the Application
+## Running the Application
 
 ### Start the Backend Server
 
@@ -80,7 +80,7 @@ npm run dev
 
 The React application will run on `http://localhost:5173` (or the port specified by Vite)
 
-## 👤 Test Accounts
+## Test Accounts
 
 ### Officer Account
 
@@ -114,7 +114,7 @@ The React application will run on `http://localhost:5173` (or the port specified
 - **Password**: `thuy123`
 - **Role**: Normal User
 
-## 📱 Features
+## Features
 
 ### For Normal Users
 
@@ -137,7 +137,7 @@ The React application will run on `http://localhost:5173` (or the port specified
 - Filter between reviewed and unreviewed submissions
 - Click on submissions to view detailed KYC information
 
-## 🔧 Configuration
+## Configuration
 
 ### JSON Server Configuration
 
@@ -152,7 +152,7 @@ The server runs with the following default settings:
 - **Development Server**: Vite dev server
 - **API Base URL**: Configure in your API client to point to `http://localhost:8000`
 
-## 📊 Database Structure
+## Database Structure
 
 ### Users Collection
 
@@ -186,75 +186,3 @@ The server runs with the following default settings:
   "status": "number (0: Pending, 1: Approved, 2: Rejected)"
 }
 ```
-
-## 🎨 Key Components
-
-- **Authentication**: Login system with role-based access
-- **KYC Form**: Multi-section form with dynamic field arrays
-- **Submissions Table**: List view of all submissions with status indicators
-- **Confirm Dialog**: Confirmation modal for approve/reject actions
-- **Admin Layout**: Fixed header and sidebar navigation
-
-## 🔐 Security Notes
-
-⚠️ **Important**: This is a demonstration project using JSON Server. In production:
-
-- Use proper password hashing (bcrypt, argon2)
-- Implement JWT or session-based authentication
-- Use HTTPS for all communications
-- Add proper input validation and sanitization
-- Implement CSRF protection
-- Use environment variables for sensitive data
-
-## 🐛 Troubleshooting
-
-### Port Already in Use
-
-If you get a port conflict error:
-
-- Change the port in the package.json scripts
-- Or kill the process using the port
-
-### CORS Issues
-
-JSON Server should handle CORS by default, but if you encounter issues:
-
-- Check that both servers are running
-- Verify the API base URL in your client configuration
-
-### Dependencies Issues
-
-```bash
-# Clear node_modules and reinstall
-rm -rf node_modules package-lock.json
-npm install
-```
-
-## 📝 Development
-
-### Adding New Features
-
-1. Create new components in `client/src/components`
-2. Add new routes in the router configuration
-3. Create API hooks in `client/src/hooks`
-4. Update `server/db.json` for new data structures
-
-### Code Structure
-
-- `/client/src/pages`: Page components
-- `/client/src/components`: Reusable components
-- `/client/src/hooks`: Custom React hooks
-- `/client/src/constant`: Constants and configuration
-- `/server`: Backend server and database
-
-## 📄 License
-
-This project is for educational purposes.
-
-## 👥 Support
-
-For issues or questions, please open an issue in the repository.
-
----
-
-**Happy Coding! 🚀**
